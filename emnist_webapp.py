@@ -30,8 +30,6 @@ model = load_emnist_model()
 emnist_byclass_labels = list('0123456789' + string.ascii_uppercase + string.ascii_lowercase)
 num_classes = 62
 
-# --- 3. Create the Drawing Canvas ---
-# We set the background to black and stroke to white, just like our EMNIST data!
 canvas_result = st_canvas(
     fill_color="rgba(0, 0, 0, 1)",  # Black background
     stroke_width=15,               # Brush width

@@ -3,3 +3,4 @@ pandas
 numpy
 tensorflow
 scikit-learn
+streamlit_drawable_canvas

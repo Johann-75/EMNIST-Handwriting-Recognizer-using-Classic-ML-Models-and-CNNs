@@ -27,8 +27,15 @@ def load_emnist_model():
         return None
 
 model = load_emnist_model()
-emnist_byclass_labels = list('0123456789' + string.ascii_uppercase + string.ascii_lowercase)
-num_classes = 62
+mapping_path = "emnist-balanced-mapping.txt" 
+emnist_labels = {}
+with open(mapping_path, 'r') as f:
+    for line in f:
+        label_id, ascii_code = line.strip().split()
+        emnist_labels[int(label_id)] = chr(int(ascii_code))
+
+emnist_labels_list = [emnist_labels[i] for i in sorted(emnist_labels.keys())]
+num_classes = len(emnist_labels_list)
 
 canvas_result = st_canvas(
     fill_color="rgba(0, 0, 0, 1)",  # Black background
@@ -69,7 +76,7 @@ if st.button("Predict") and model is not None:
         # --- Make Prediction ---
         prediction = model.predict(img_batch)
         pred_index = np.argmax(prediction)
-        pred_char = emnist_byclass_labels[pred_index]
+        pred_char = emnist_labels_list[pred_index]
         confidence = prediction[0][pred_index] * 100
 
         st.success(f"Prediction: **{pred_char}** (Confidence: {confidence:.2f}%)")
@@ -79,7 +86,7 @@ if st.button("Predict") and model is not None:
         
         # Create a DataFrame for the bar chart
         top_indices = np.argsort(prediction[0])[-5:][::-1]
-        top_chars = [emnist_byclass_labels[i] for i in top_indices]
+        top_chars = [emnist_labels_list[i] for i in top_indices]
         top_confs = [prediction[0][i] for i in top_indices]
         
         df = pd.DataFrame({
